@@ -141,79 +141,21 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Send data to backend or Netlify Forms
+      // Simulate form submission
       const submitBtn = quoteForm.querySelector('button[type="submit"]');
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
       submitBtn.disabled = true;
 
-      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-
-      if (isLocalhost) {
-        // LOCAL: Send to Node.js backend
-        const formData = {
-          name,
-          company: document.getElementById('company').value.trim(),
-          phone,
-          email,
-          pipeSize: document.getElementById('pipeSize').value,
-          quantity: document.getElementById('quantity').value.trim(),
-          message: document.getElementById('message').value.trim()
-        };
-
-        fetch('/api/inquiry', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
-        })
-          .then(res => res.json())
-          .then(data => {
-            if (data.success) {
-              quoteForm.style.display = 'none';
-              formSuccess.classList.add('show');
-            } else {
-              alert(data.message || 'Something went wrong. Please try again.');
-              submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Inquiry';
-              submitBtn.disabled = false;
-            }
-          })
-          .catch(err => {
-            console.error('Submission error:', err);
-            alert('Could not connect to server. Please try again later.');
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Inquiry';
-            submitBtn.disabled = false;
-          });
-      } else {
-        // NETLIFY: Submit via Netlify Forms
-        const formDataObj = new FormData(quoteForm);
-        // Ensure form-name is explicitly included (required by Netlify)
-        formDataObj.set('form-name', 'inquiry');
-
-        fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams(formDataObj).toString()
-        })
-          .then(res => {
-            if (res.ok) {
-              quoteForm.style.display = 'none';
-              formSuccess.classList.add('show');
-            } else {
-              throw new Error('Submission failed');
-            }
-          })
-          .catch(err => {
-            console.error('Submission error:', err);
-            alert('Could not submit form. Please try again.');
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Inquiry';
-            submitBtn.disabled = false;
-          });
-      }
+      setTimeout(() => {
+        quoteForm.style.display = 'none';
+        formSuccess.classList.add('show');
+      }, 1500);
     });
   }
 
   // ---------- Smooth Scroll for Anchor Links ----------
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
+    anchor.addEventListener('click', function(e) {
       const targetId = this.getAttribute('href');
       if (targetId === '#') return;
 
